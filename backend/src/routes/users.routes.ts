@@ -20,7 +20,7 @@ router.post(
     if (!errors.isEmpty()) {
       return res.status(400).json({ message: errors.array() });
     }
-    
+
     try {
       let user = await User.findOne({ email: req.body.email });
 
@@ -32,7 +32,7 @@ router.post(
       await user.save();
 
       const token = jwt.sign(
-        { userId: user._id },
+        { userId: user.id },
         process.env.JWT_SECRET_KEY as string,
         {
           expiresIn: "1d",
@@ -44,7 +44,9 @@ router.post(
         secure: process.env.NODE_ENV === "production",
         maxAge: 1000 * 60 * 60 * 24,
       });
+
       return res.sendStatus(200);
+      
     } catch (error) {
       console.log(error);
       res.status(500).json({ message: "Something went wrong." });
