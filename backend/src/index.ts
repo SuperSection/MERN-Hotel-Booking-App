@@ -1,6 +1,7 @@
 import express from "express";
-import cors from "cors";
 import "dotenv/config";
+import cors from "cors";
+import path from "path";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import userRoutes from "./routes/users.routes";
@@ -19,6 +20,8 @@ app.use(
     credentials: true,
   })
 );
+
+app.use(express.static(path.join(__dirname, "../../frontend/dist")));
 
 // Declare Routes
 app.use("/api/auth", authRoutes);
