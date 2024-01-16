@@ -26,12 +26,12 @@ router.post(
     try {
       const user = await User.findOne({ email });
       if (!user) {
-        return res.status(400).json({ message: "User not found." });
+        return res.status(400).json({ message: "User not found" });
       }
 
       const isPasswordCorrect = await bcrypt.compare(password, user.password);
       if (!isPasswordCorrect) {
-        return res.status(400).json({ message: "Invalid password." });
+        return res.status(400).json({ message: "Invalid password" });
       }
 
       const token = jwt.sign(
@@ -52,13 +52,20 @@ router.post(
       
     } catch (error) {
       console.log(error);
-      res.status(500).json({ message: "Something went wrong." });
+      res.status(500).json({ message: "Something went wrong" });
     }
   }
 );
 
 router.get("/validate-token", verifyToken, (req: Request, res: Response) => {
   res.status(200).json({ userId: req.userId });
+});
+
+router.post("/logout", (req: Request, res: Response) => {
+  res.cookie("auth_token", "", {
+    expires: new Date(0),
+  });
+  res.send();
 });
 
 export default router;
